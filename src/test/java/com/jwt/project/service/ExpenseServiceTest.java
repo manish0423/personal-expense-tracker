@@ -26,6 +26,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceTest {
 
@@ -190,21 +193,56 @@ class ExpenseServiceTest {
         verify(dashboardService).invalidateCache(user);
     }
 
+    // @Test
+    // void getFilteredExpenses_WithFilters() {
+    //     // Arrange
+    //     List<Expense> expenses = Arrays.asList(expense);
+    //     when(expenseRepository.findByUserWithFilters(eq(user), eq("MAY"), eq(1L),
+    //         any(BigDecimal.class), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class)))
+    //         .thenReturn(expenses);
+    //     when(expenseMapper.toDto(any(Expense.class))).thenReturn(expenseDto);
+
+    //     // Act
+    //     List<ExpenseDto> result = expenseService.getFilteredExpenses(user, "MAY", 1L,
+    //         BigDecimal.valueOf(10), BigDecimal.valueOf(100), null, null, "date", "DESC");
+
+    //     // Assert
+    //     assertNotNull(result);
+    //     assertEquals(1, result.size());
+    // }
+
     @Test
-    void getFilteredExpenses_WithFilters() {
-        // Arrange
-        List<Expense> expenses = Arrays.asList(expense);
-        when(expenseRepository.findByUserWithFilters(eq(user), eq("MAY"), eq(1L),
-            any(BigDecimal.class), any(BigDecimal.class), any(LocalDate.class), any(LocalDate.class)))
-            .thenReturn(expenses);
-        when(expenseMapper.toDto(any(Expense.class))).thenReturn(expenseDto);
+void getFilteredExpenses_WithFilters() {
+    // Arrange
+    List<Expense> expenses = Arrays.asList(expense);
 
-        // Act
-        List<ExpenseDto> result = expenseService.getFilteredExpenses(user, "MAY", 1L,
-            BigDecimal.valueOf(10), BigDecimal.valueOf(100), null, null, "date", "DESC");
+    when(expenseRepository.findByUserWithFilters(
+            eq(user),
+            eq("MAY"),
+            eq(1L),
+            eq(BigDecimal.valueOf(10)),
+            eq(BigDecimal.valueOf(100)),
+            isNull(),
+            isNull()
+    )).thenReturn(expenses);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
+    when(expenseMapper.toDto(any(Expense.class))).thenReturn(expenseDto);
+
+    // Act
+    List<ExpenseDto> result = expenseService.getFilteredExpenses(
+            user,
+            "MAY",
+            1L,
+            BigDecimal.valueOf(10),
+            BigDecimal.valueOf(100),
+            null,
+            null,
+            "date",
+            "DESC"
+    );
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+}
 }
