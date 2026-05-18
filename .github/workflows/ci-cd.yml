@@ -55,26 +55,3 @@ jobs:
         name: expense-tracker-jar
         path: target/*.jar
         retention-days: 30
-        
-    # STEP 7: Create GitHub Release (only on main branch)
-    - name: Create GitHub Release
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
-        body: |
-          🚀 Automated release from commit ${{ github.sha }}
-          
-          **Changes:**
-          - Built from latest main branch
-          - All tests passed ✅
-          
-          **Download:**
-          - Download the JAR file below
-          - Run with: `java -jar personal-expense-tracker-0.0.1-SNAPSHOT.jar`
-        files: target/*.jar
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
