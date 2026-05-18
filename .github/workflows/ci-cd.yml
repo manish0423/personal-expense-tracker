@@ -36,9 +36,13 @@ jobs:
         key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
         restore-keys: maven-${{ runner.os }}-
         
-    # STEP 4: Run tests
+    # STEP 4: Run tests with H2 database
     - name: Run Tests
-      run: mvn clean test
+      run: mvn clean test -Dspring.profiles.active=test
+      env:
+        # Ensure H2 is used for tests
+        SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+        SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
       
     # STEP 5: Build JAR
     - name: Build JAR
